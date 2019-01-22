@@ -1,2 +1,2 @@
 # CSAPP
-CSAPP learning and relative labs.
+undone labs of CSAPP
