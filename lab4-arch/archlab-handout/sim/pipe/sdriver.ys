@@ -1,0 +1,212 @@
+#######################################################################
+# Test for copying block of size 4;
+#######################################################################
+	.pos 0
+main:	irmovq Stack, %rsp  	# Set up stack pointer
+
+	# Set up arguments for copy function and then invoke it
+	irmovq $4, %rdx		# src and dst have 4 elements
+	irmovq dest, %rsi	# dst array
+	irmovq src, %rdi	# src array
+	call ncopy		 
+	halt			# should halt with num nonzeros in %rax
+StartFun:
+#/* $begin ncopy-ys */
+##################################################################
+# ncopy.ys - Copy a src block of len words to dst.
+# Return the number of positive words (>0) contained in src.
+#
+# Include your name and ID here.
+#
+# Describe how and why you modified the baseline code.
+#
+##################################################################
+# Do not modify this portion
+# Function prologue.
+# %rdi = src, %rsi = dst, %rdx = len
+ncopy:
+
+##################################################################
+# You can modify this portion
+	# Loop header
+	xorq %rax,%rax		# count = 0;
+	iaddq $-1, %rdx     # 對 len = 1 的優化
+	jne More
+	mrmovq (%rdi), %r10
+	irmovq $1, %r11
+	rmmovq %r10, (%rsi)
+	andq %r10, %r10
+	cmovg %r11, %rax
+	jmp Done
+More:                   # 對不等於 1 的
+	iaddq $-6, %rdx     # 一個副作用，小於 7 的直接進入 Last
+	jg Loop
+ForLessThan7:
+	iaddq $0x3, %rdx
+	jge Last
+	iaddq $0x4, %rdx
+	jne Fin
+	jmp Done
+Fin:                    # 剩下的不到 4 個
+	mrmovq (%rdi), %r10
+	rrmovq %rax, %r11
+	iaddq $0x1, %r11
+	rmmovq %r10, (%rsi)
+	andq %r10, %r10
+	cmovg %r11, %rax
+	iaddq $0x8, %rdi
+	iaddq $0x8, %rsi
+	iaddq $-1, %rdx
+	jg Fin
+	jmp Done
+Last:                    # 剩下的有 4 個及以上
+	mrmovq (%rdi), %r10
+	rrmovq %rax, %r11
+	iaddq $0x1, %r11
+	rmmovq %r10, (%rsi)
+	andq %r10, %r10
+	cmovg %r11, %rax
+	
+	mrmovq 0x8(%rdi), %r10
+	rrmovq %rax, %r11
+	iaddq $0x1, %r11
+	rmmovq %r10, 0x8(%rsi)
+	andq %r10, %r10
+	cmovg %r11, %rax
+
+	mrmovq 0x10(%rdi), %r10
+	rrmovq %rax, %r11
+	iaddq $0x1, %r11
+	rmmovq %r10, 0x10(%rsi)
+	andq %r10, %r10
+	cmovg %r11, %rax
+	
+	mrmovq 0x18(%rdi), %r10
+	rrmovq %rax, %r11
+	iaddq $0x1, %r11
+	rmmovq %r10, 0x18(%rsi)
+	andq %r10, %r10
+	cmovg %r11, %rax
+	
+	iaddq $0x20, %rdi
+	iaddq $0x20, %rsi
+	andq %rdx, %rdx
+	jg Fin
+	jmp Done
+Loop:                   # 大於 7 個
+	mrmovq (%rdi), %r10
+	rrmovq %rax, %r11
+	iaddq $0x1, %r11
+	rmmovq %r10, (%rsi)
+	andq %r10, %r10
+	cmovg %r11, %rax
+	
+	mrmovq 0x8(%rdi), %r10
+	rrmovq %rax, %r11
+	iaddq $0x1, %r11
+	rmmovq %r10, 0x8(%rsi)
+	andq %r10, %r10
+	cmovg %r11, %rax
+
+	mrmovq 0x10(%rdi), %r10
+	rrmovq %rax, %r11
+	iaddq $0x1, %r11
+	rmmovq %r10, 0x10(%rsi)
+	andq %r10, %r10
+	cmovg %r11, %rax
+	
+	mrmovq 0x18(%rdi), %r10
+	rrmovq %rax, %r11
+	iaddq $0x1, %r11
+	rmmovq %r10, 0x18(%rsi)
+	andq %r10, %r10
+	cmovg %r11, %rax
+	
+	mrmovq 0x20(%rdi), %r10
+	rrmovq %rax, %r11
+	iaddq $0x1, %r11
+	rmmovq %r10, 0x20(%rsi)
+	andq %r10, %r10
+	cmovg %r11, %rax
+	
+	mrmovq 0x28(%rdi), %r10
+	rrmovq %rax, %r11
+	iaddq $0x1, %r11
+	rmmovq %r10, 0x28(%rsi)
+	andq %r10, %r10
+	cmovg %r11, %rax
+
+	mrmovq 0x30(%rdi), %r10
+	rrmovq %rax, %r11
+	iaddq $0x1, %r11
+	rmmovq %r10, 0x30(%rsi)
+	andq %r10, %r10
+	cmovg %r11, %rax
+	
+	mrmovq 0x38(%rdi), %r10
+	rrmovq %rax, %r11
+	iaddq $0x1, %r11
+	rmmovq %r10, 0x38(%rsi)
+	andq %r10, %r10
+	cmovg %r11, %rax
+	iaddq $0x40, %rdi
+	iaddq $0x40, %rsi
+	
+	iaddq $-8, %rdx
+Test:
+	jg Loop			# if so, goto Loop:
+	jmp ForLessThan7
+
+##################################################################
+# Do not modify the following section of code
+# Function epilogue.
+Done:
+	ret
+##################################################################
+# Keep the following label at the end of your function
+End:
+#/* $end ncopy-ys */
+EndFun:
+
+###############################
+# Source and destination blocks 
+###############################
+	.align 8
+src:
+	.quad -1
+	.quad 2
+	.quad -3
+	.quad 4
+	.quad 0xbcdefa # This shouldn't get moved
+
+	.align 16
+Predest:
+	.quad 0xbcdefa
+dest:
+	.quad 0xcdefab
+	.quad 0xcdefab
+	.quad 0xcdefab
+	.quad 0xcdefab
+Postdest:
+	.quad 0xdefabc
+
+.align 8
+# Run time stack
+	.quad 0
+	.quad 0
+	.quad 0
+	.quad 0
+	.quad 0
+	.quad 0
+	.quad 0
+	.quad 0
+	.quad 0
+	.quad 0
+	.quad 0
+	.quad 0
+	.quad 0
+	.quad 0
+	.quad 0
+	.quad 0
+
+Stack:

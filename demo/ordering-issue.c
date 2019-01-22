@@ -1,3 +1,13 @@
+/** 
+Procedures show_int, show_float, and show_pointer demonstrate how to
+use procedure show_bytes to print the byte representations of C program objects
+of type int, float, and void *, respectively. Observe that they simply pass show_
+bytes a pointer &x to their argument x, casting the pointer to be of type unsigned
+char *. This cast indicates to the compiler that the program should consider the
+pointer to be to a sequence of bytes rather than to an object of the original data
+type. This pointer will then be to the lowest byte address occupied by the object.
+*/
+
 #include <stdio.h>
 
 typedef unsigned char *byte_pointer;
@@ -32,7 +42,7 @@ void test_show_bytes(int val) {
 
 int main(int argc, char const *argv[])
 {
-    int val = 12345;
+    int val = -12345;
     test_show_bytes(val);
 
     return 0;
