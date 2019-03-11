@@ -1,0 +1,10 @@
+Border relations with Canada have never been better.
+1 2 4 8 16 32
+3 256
+7 0
+ionefg
+maduiersnfotvbylSo you think you can stop the bomb with ctrl-c, do you?
+break explode_bomb
+break phase_6
+set args my_sol.txt
+run

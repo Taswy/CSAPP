@@ -490,13 +490,13 @@ Disassembly of section .text:
   4010ac:	75 dd                	jne    40108b <phase_5+0x29>
   4010ae:	c6 44 24 16 00       	movb   $0x0,0x16(%rsp)
   4010b3:	be 5e 24 40 00       	mov    $0x40245e,%esi
-  4010b8:	48 8d 7c 24 10       	lea    0x10(%rsp),%rdi
+  4010b8:	48 8d 7c 24 10       	lea    0x10(%rsp),%rdi            # rdi == rsi == flyers
   4010bd:	e8 76 02 00 00       	callq  401338 <strings_not_equal>
   4010c2:	85 c0                	test   %eax,%eax
   4010c4:	74 13                	je     4010d9 <phase_5+0x77>
   4010c6:	e8 6f 03 00 00       	callq  40143a <explode_bomb>
-  4010cb:	0f 1f 44 00 00       	nopl   0x0(%rax,%rax,1)
-  4010d0:	eb 07                	jmp    4010d9 <phase_5+0x77>
+  4010cb:	0f 1f 44 00 00       	nopl   0x0(%rax,%rax,1)       #unuse
+  4010d0:	eb 07                	jmp    4010d9 <phase_5+0x77> #unuse
   4010d2:	b8 00 00 00 00       	mov    $0x0,%eax
   4010d7:	eb b2                	jmp    40108b <phase_5+0x29>
   4010d9:	48 8b 44 24 18       	mov    0x18(%rsp),%rax

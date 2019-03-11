@@ -1,5 +1,5 @@
-
-int bitAnd(int, int);
+int bitAnd(int x , int y);
+#define KF 2
 int test_bitAnd(int, int);
 int getByte(int, int);
 int test_getByte(int, int);
